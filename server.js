@@ -4,10 +4,8 @@ const mysql = require('mysql');
 const cors = require('cors');
 const app = new express();
 
-const port = process.env.PORT;
-const hostname = '127.0.0.1';
-const http = require('http');
-
+// 8. feladat
+app.use(cors())
 
 var pool = mysql.createPool({
     connectionLimit: 10,
@@ -18,7 +16,7 @@ var pool = mysql.createPool({
 });
 
 // User login checking
-app.get('/login', (req, res) => {
+app.post('/login', (req, res) => {
     let data = {
         email: req.body.email,
         pass: req.body.passwd,
@@ -30,19 +28,18 @@ app.get('/login', (req, res) => {
     });
 });
 
-/*
+
 // SELECT ALL RECORDS FROM :table
-app.     ('/:table', (req, res) => {
-    //...................................
-    //...................................
-    //...................................
-    //...................................
-    //...................................
+app.get('/:table', (req, res) => {
+    let table = req.params.table;
+    pool.query(`SELECT * FROM ${table}`, (err, results) => {
+        if (err) throw err;
+        res.json(results);
+    });
 });
 
-
 // SELECT ONE RECORD FROM :table
-app.     ('/:table/:field/:id', (req, res) => {
+app.get('/:table/:field/:id', (req, res) => {
     let table = req.params.table;
     let field = req.params.field;
     let id = req.params.id;
@@ -52,8 +49,10 @@ app.     ('/:table/:field/:id', (req, res) => {
     });
 });
 
+
+
 // INSERT RECORD TO :table
-app.    ('/:table', (req, res) => {
+app.post('/:table', (req, res) => {
     let table = req.params.table;
     let data = req.body;
 
@@ -76,7 +75,7 @@ app.    ('/:table', (req, res) => {
 });
 
 // UPDATE RECORD IN :table
-app.     ('/:table/:id', (req, res) => {
+app.patch('/:table/:id', (req, res) => {
     let table = req.params.table;
     let id = req.params.id;
     let data = req.body;
@@ -98,7 +97,7 @@ app.     ('/:table/:id', (req, res) => {
 });
 
 // DELETE ONE RECORD FROM :table
-app.     ('/:table/:id', (req, res) => {
+app.delete('/:table/:id', (req, res) => {
     let table = req.params.table;
     let id = req.params.id;
     pool.query(`DELETE FROM ${table} WHERE ID=${id}`, (err, results) => {
@@ -108,16 +107,20 @@ app.     ('/:table/:id', (req, res) => {
 });
 
 // DELETE ALL RECORD FROM :table
-app.    ('/:table', (req, res) => {
+app.delete('/:table', (req, res) => {
     let table = req.params.table;
     pool.query(`DELETE FROM ${table}`, (err, results) => {
         if (err) throw err;
         res.json(results);
     });
 });
-*/
+
 
 // 5. feladat
+const port = process.env.PORT;
+const hostname = '127.0.0.1';
+const http = require('http');
+
 const server = http.createServer((req, res) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'text/plain');
