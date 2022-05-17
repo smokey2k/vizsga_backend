@@ -4,9 +4,13 @@ const mysql = require('mysql');
 const cors = require('cors');
 const app = new express();
 
+// 7. feladat
+app.use(express.json());
+
 // 8. feladat
 app.use(cors())
 
+// 4. feladat
 var pool = mysql.createPool({
     connectionLimit: 10,
     host: process.env.DBHOST,
@@ -14,6 +18,9 @@ var pool = mysql.createPool({
     password: process.env.DBPASS,
     database: process.env.DBNAME
 });
+
+
+// 9. feladat
 
 // User login checking
 app.post('/login', (req, res) => {
